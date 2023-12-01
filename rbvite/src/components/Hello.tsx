@@ -1,5 +1,3 @@
-// import { PropsWithChildren } from 'react';
-// import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -9,7 +7,6 @@ type Props = {
   children: ReactNode;
 };
 
-// const Hello = ({ name, age, children }: PropsWithChildren<Props>) => {
 const Hello = ({ name, age, children }: Props) => {
   // const Hello = (prop: Props) => {
   // const { name, age, children } = prop;
