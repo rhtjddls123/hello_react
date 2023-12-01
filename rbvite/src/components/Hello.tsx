@@ -3,7 +3,6 @@ import { ReactNode } from 'react';
 type Props = {
   name: string;
   age: number;
-  // children: ReactElement;
   children: ReactNode;
 };
 
