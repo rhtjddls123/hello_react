@@ -1,36 +1,24 @@
 // src/components/My.tsx
-import { Cart, Session } from '../App';
 import Login from './Login';
 import Profile from './Profile';
-import { LoginUser } from '../App';
 import AddCart from './AddCart';
+import { useSession } from '../hooks/session-context';
 
-type Props = {
-  session: Session;
-  login: ({ id, name }: LoginUser) => void;
-  logout: () => void;
-  removeCartItem: (idItem: number) => void;
-  addCart: ({ id, name, price }: Cart) => void;
-};
+const My = () => {
+  const { session, addCart, removeCartItem } = useSession();
 
-const My = ({
-  session: { loginUser, cart },
-  login,
-  logout,
-  removeCartItem,
-  addCart,
-}: Props) => {
-  console.log('@@@My', { loginUser });
   return (
     <>
-      {loginUser ? (
-        <Profile loginUser={loginUser} logout={logout} />
+      {/* <button onClick={() => loginHandleRef.current?.focusName()}>XXX</button> */}
+      {session.loginUser ? (
+        <Profile />
       ) : (
-        <Login login={login} />
+        <Login />
+        // <Login login={login} ref={loginHandleRef} />
       )}
       <AddCart addCart={addCart}></AddCart>
       <ul>
-        {cart.map(({ id, name, price }) => (
+        {session.cart.map(({ id, name, price }) => (
           <li key={id}>
             <small>
               {id}

@@ -1,49 +1,55 @@
 // src/components/Login.tsx
-import { FormEvent, useEffect, useRef } from 'react';
-import { LoginUser } from '../App';
+import {
+  FormEvent,
+  useEffect,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
+import { useSession } from '../hooks/session-context';
 
-type Props = {
-  login: ({ id, name }: LoginUser) => void;
+export type LoginHandle = {
+  focusName: () => void;
 };
 
-const Login = ({ login }: Props) => {
+const Login = forwardRef((_, handleRef) => {
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  // const [id, setId] = useState(0);
-  // const [name, setName] = useState('');
-
-  // const changeId = (e: ChangeEvent<HTMLInputElement>) =>
-  //   setId(Number(e.currentTarget.value));
-
-  // const changeName = (e: ChangeEvent<HTMLInputElement>) => {
-  //   // console.log(e.currentTarget.value);
-  //   return setName(e.currentTarget.value);
-  // };
+  const { login } = useSession();
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const id = Number(idRef.current?.value);
     const name = nameRef.current?.value || '';
     login({ id, name });
+    focusName();
   };
+
+  const focusName = () => {
+    if (nameRef.current) nameRef.current.focus();
+  };
+
+  useImperativeHandle(handleRef, () => ({
+    focusName,
+  }));
 
   useEffect(() => {
     if (idRef.current) idRef.current.value = '100';
-    if (nameRef.current) nameRef.current.focus();
+    focusName();
   }, []);
 
   return (
     <>
-      <form onSubmit={(e) => submit(e)}>
+      <form onSubmit={submit}>
         <div>
           Login ID(숫자): <input type='number' ref={idRef} />
         </div>
         <div>
           Login Name: <input type='text' ref={nameRef} />
         </div>
-        <button>login</button>
+        <button type='submit'>login</button>
       </form>
     </>
   );
-};
+});
 export default Login;
