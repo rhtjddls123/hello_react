@@ -4,6 +4,7 @@ import {
   PropsWithChildren,
   useContext,
   useRef,
+  useEffect,
 } from 'react';
 import { DefaultSession } from '../dummy';
 import { LoginHandle } from '../components/Login';
@@ -25,6 +26,18 @@ const SessionContext = createContext<SessionContextProps>({
 
 const SessionContextProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session>(DefaultSession);
+
+  const url = '/data/sample.json';
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+    fetch(url, { signal })
+      .then((res) => res.json())
+      .then((data) => setSession(data));
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   const addCart = (id: number, name: string, price: number) => {
     id = id || Math.max(...session.cart.map((item) => item.id), 0) + 1;
