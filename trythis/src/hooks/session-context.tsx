@@ -12,7 +12,7 @@ type SessionContextProps = {
   session: Session;
   login: ({ id, name }: LoginUser) => void;
   logout: () => void;
-  addCart: (name: string, price: number, id?: number) => void;
+  addCart: (id: number, name: string, price: number) => void;
   removeCartItem: (itemId: number) => void;
 };
 const SessionContext = createContext<SessionContextProps>({
@@ -26,22 +26,16 @@ const SessionContext = createContext<SessionContextProps>({
 const SessionContextProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session>(DefaultSession);
 
-  const addCart = (name: string, price: number, itemId?: number) => {
-    const id =
-      session.cart
-        .map((cart) => cart.id)
-        .sort()
-        .at(-1) || 0;
-    if (itemId) {
-      const tmpCart = [
-        ...session.cart.filter((cart) => cart.id !== itemId),
-        { id: itemId, name, price },
-      ];
-      setSession({ ...session, cart: tmpCart });
+  const addCart = (id: number, name: string, price: number) => {
+    id = id || Math.max(...session.cart.map((item) => item.id), 0) + 1;
+    const modifyItem = session.cart.find((item) => item.id === id);
+    if (modifyItem) {
+      modifyItem.name = name;
+      modifyItem.price = price;
     } else {
-      const tmpCart = [...session.cart, { id: id + 1, name, price }];
-      setSession({ ...session, cart: tmpCart });
+      session.cart.push({ id, name, price });
     }
+    setSession({ ...session, cart: [...session.cart] });
   };
 
   const loginHandleRef = useRef<LoginHandle>(null);

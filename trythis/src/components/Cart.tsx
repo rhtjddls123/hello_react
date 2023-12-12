@@ -9,7 +9,7 @@ import {
 import { useSession } from '../hooks/session-context';
 
 type Props = {
-  addCart: (name: string, price: number, id?: number) => void;
+  addCart: (id: number, name: string, price: number) => void;
 };
 export type CartHandle = {
   setCartItem: (id: number) => void;
@@ -18,26 +18,24 @@ export type CartHandle = {
 const Cart = forwardRef(({ addCart }: Props, ref) => {
   const { session } = useSession();
   const [hasDirty, setDirty] = useState(false);
-  const [nowModify, setModify] = useState(false);
-  const [nowName, setName] = useState('');
-  const [nowPrice, setPrice] = useState(0);
-  // const [price, setPrice] = useState(0);
-  // const [name, setName] = useState('');
   const idRef = useRef<number>(0);
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
 
   const checkDirty = () => {
-    if (nowModify) {
-      nowName === nameRef.current?.value &&
-      '' + nowPrice === priceRef.current?.value
-        ? setDirty(false)
-        : setDirty(true);
-      return;
-    }
-    nameRef.current?.value === '' && priceRef.current?.value === ''
-      ? setDirty(false)
-      : setDirty(true);
+    const id = idRef.current;
+    const name = nameRef.current?.value;
+    const price = priceRef.current?.value;
+    const selectedItem = !id
+      ? { name: '', price: 0 }
+      : session.cart.find((item) => item.id === id) || {
+          name: '',
+          price: 0,
+        };
+    setDirty(
+      (name !== '' || price !== '') &&
+        (name !== selectedItem.name || price !== '' + selectedItem.price)
+    );
   };
 
   const setCartItem = (id: number) => {
@@ -49,9 +47,6 @@ const Cart = forwardRef(({ addCart }: Props, ref) => {
     if (nameRef.current && priceRef.current) {
       nameRef.current.value = selectedItem?.name;
       priceRef.current.value = '' + selectedItem?.price;
-      setName(selectedItem?.name);
-      setPrice(selectedItem?.price);
-      setModify(true);
     }
   };
 
@@ -72,9 +67,8 @@ const Cart = forwardRef(({ addCart }: Props, ref) => {
       alert('금액을 정확히 입력해 주세요!');
       return priceRef.current?.focus();
     }
-    if (nowModify) addCart(name, Number(price), Number(idRef.current));
-    else addCart(name, Number(price));
-    setModify(false);
+    addCart(idRef.current, name, Number(price));
+    idRef.current = 0;
     nameRef.current.value = '';
     priceRef.current.value = '';
     setDirty(false);
