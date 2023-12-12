@@ -1,5 +1,11 @@
 // src/components/Login.tsx
-import { FormEvent, useRef, forwardRef, useImperativeHandle } from 'react';
+import {
+  FormEvent,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import { useSession } from '../hooks/session-context';
 
 type Props = {
@@ -8,15 +14,31 @@ type Props = {
 export type CartHandle = {
   setCartItem: (id: number) => void;
 };
-let nowModify = false;
 
 const Cart = forwardRef(({ addCart }: Props, ref) => {
   const { session } = useSession();
+  const [hasDirty, setDirty] = useState(false);
+  const [nowModify, setModify] = useState(false);
+  const [nowName, setName] = useState('');
+  const [nowPrice, setPrice] = useState(0);
   // const [price, setPrice] = useState(0);
   // const [name, setName] = useState('');
   const idRef = useRef<number>(0);
   const nameRef = useRef<HTMLInputElement>(null);
   const priceRef = useRef<HTMLInputElement>(null);
+
+  const checkDirty = () => {
+    if (nowModify) {
+      nowName === nameRef.current?.value &&
+      '' + nowPrice === priceRef.current?.value
+        ? setDirty(false)
+        : setDirty(true);
+      return;
+    }
+    nameRef.current?.value === '' && priceRef.current?.value === ''
+      ? setDirty(false)
+      : setDirty(true);
+  };
 
   const setCartItem = (id: number) => {
     idRef.current = id;
@@ -27,7 +49,9 @@ const Cart = forwardRef(({ addCart }: Props, ref) => {
     if (nameRef.current && priceRef.current) {
       nameRef.current.value = selectedItem?.name;
       priceRef.current.value = '' + selectedItem?.price;
-      nowModify = true;
+      setName(selectedItem?.name);
+      setPrice(selectedItem?.price);
+      setModify(true);
     }
   };
 
@@ -50,9 +74,10 @@ const Cart = forwardRef(({ addCart }: Props, ref) => {
     }
     if (nowModify) addCart(name, Number(price), Number(idRef.current));
     else addCart(name, Number(price));
-    nowModify = false;
+    setModify(false);
     nameRef.current.value = '';
     priceRef.current.value = '';
+    setDirty(false);
   };
 
   return (
@@ -60,10 +85,12 @@ const Cart = forwardRef(({ addCart }: Props, ref) => {
       <form onSubmit={submit}>
         <div>
           <br></br>
-          상품명: <input type='text' ref={nameRef} />
-          가격: <input type='number' ref={priceRef} />
+          상품명:{' '}
+          <input type='text' ref={nameRef} onChange={() => checkDirty()} />
+          가격:{' '}
+          <input type='number' ref={priceRef} onChange={() => checkDirty()} />
         </div>
-        <button type='submit'>저장</button>
+        {hasDirty && <button type='submit'>저장</button>}
       </form>
     </>
   );
