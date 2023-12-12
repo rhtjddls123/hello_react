@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { DefaultSession } from '../dummy';
 import { LoginHandle } from '../components/Login';
+import { useFetchs } from '../hooks/fetch-hooks';
 
 type SessionContextProps = {
   session: Session;
@@ -26,18 +27,14 @@ const SessionContext = createContext<SessionContextProps>({
 
 const SessionContextProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session>(DefaultSession);
+  const { useFetch } = useFetchs();
 
   const url = '/data/sample.json';
+  const data = useFetch<Session>(url);
+
   useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-    fetch(url, { signal })
-      .then((res) => res.json())
-      .then((data) => setSession(data));
-    return () => {
-      controller.abort();
-    };
-  }, []);
+    if (data) setSession(data);
+  }, [data]);
 
   const addCart = (id: number, name: string, price: number) => {
     id = id || Math.max(...session.cart.map((item) => item.id), 0) + 1;
