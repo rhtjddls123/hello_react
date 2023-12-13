@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import { CartHandle } from './Cart';
 
 const My = () => {
+  // console.log('@@My');
   const { session, addCart, removeCartItem } = useSession();
   const childRef = useRef<CartHandle>(null);
 

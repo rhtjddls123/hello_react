@@ -3,7 +3,7 @@
 import { useSession } from '../hooks/session-context';
 
 const Profile = () => {
-  console.log('@@@Profile');
+  // console.log('@@@Profile');
   const {
     session: { loginUser },
     logout,

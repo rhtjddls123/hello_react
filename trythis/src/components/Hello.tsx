@@ -8,6 +8,7 @@ type Props = {
 };
 
 const Hello = ({ name, age, children }: PropsWithChildren<Props>) => {
+  // console.log('@@Hello');
   const { plusCount } = useCounter();
   return (
     <>
