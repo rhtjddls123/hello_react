@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 
 export const useFetchs = () => {
-  const memoUrl: string[] = [];
-  const memoData: any = [];
+  const cache: Record<string, any> = {};
   const useFetch = <T>(url: string): T | undefined => {
     const [data, setData] = useState<T>();
-    const index = memoUrl.indexOf(url);
 
-    if (index !== -1) return memoData[index];
-    memoUrl.push(url);
+    if (cache[url]) {
+      return cache[url];
+    }
 
     useEffect(() => {
       const controller = new AbortController();
@@ -26,7 +25,7 @@ export const useFetchs = () => {
       };
     }, []);
 
-    memoData.push(data);
+    cache[url] = data ?? {};
     return data;
   };
   return { useFetch };
