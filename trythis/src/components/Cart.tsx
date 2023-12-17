@@ -16,6 +16,7 @@ export type CartHandle = {
 };
 
 const Cart = forwardRef(({ addCart }: Props, ref) => {
+  console.log('cart@@@@');
   const { session } = useSession();
   const [hasDirty, setDirty] = useState(false);
   const idRef = useRef<number>(0);

@@ -14,6 +14,7 @@ export type LoginHandle = {
 };
 
 const Login = forwardRef((_, handleRef) => {
+  console.log('login@@@@@');
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const { login } = useSession();

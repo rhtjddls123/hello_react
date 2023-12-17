@@ -3,11 +3,11 @@ import Login from './Login';
 import Profile from './Profile';
 import Cart from './Cart';
 import { useSession } from '../hooks/session-context';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import { CartHandle } from './Cart';
 
-const My = () => {
-  // console.log('@@My');
+export const My = () => {
+  console.log('@@My');
   const { session, addCart, removeCartItem } = useSession();
   const childRef = useRef<CartHandle>(null);
 
@@ -40,4 +40,4 @@ const My = () => {
     </>
   );
 };
-export default My;
+export const MyMemo = memo(My, () => true);

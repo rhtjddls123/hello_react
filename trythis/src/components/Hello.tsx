@@ -1,15 +1,26 @@
 // src/components/Hello.tsx
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, memo } from 'react';
 import { useCounter } from '../hooks/counter-context';
+import { Sample } from './Sample';
 
 type Props = {
   name: string;
   age: number;
+  fn: () => void;
 };
 
-const Hello = ({ name, age, children }: PropsWithChildren<Props>) => {
-  // console.log('@@Hello');
+export const Hello = ({
+  name,
+  age,
+  fn,
+  children,
+}: PropsWithChildren<Props>) => {
+  console.log('@@Hello');
   const { plusCount } = useCounter();
+
+  useEffect(() => {
+    console.log('child.fn>>>', fn());
+  }, [fn]);
   return (
     <>
       <h1>
@@ -17,7 +28,9 @@ const Hello = ({ name, age, children }: PropsWithChildren<Props>) => {
       </h1>
       {children}
       <button onClick={plusCount}>count + 1</button>
+      <Sample></Sample>
     </>
   );
 };
-export default Hello;
+
+export const MemoHello = memo(Hello, () => true);
