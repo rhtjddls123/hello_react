@@ -16,7 +16,7 @@ export const Hello = ({
   children,
 }: PropsWithChildren<Props>) => {
   console.log('@@Hello');
-  const { plusCount } = useCounter();
+  const { plusCount, minusCount } = useCounter();
 
   useEffect(() => {
     console.log('child.fn>>>', fn());
@@ -27,7 +27,8 @@ export const Hello = ({
         Hello, {name}({age})
       </h1>
       {children}
-      <button onClick={plusCount}>count + 1</button>
+      <button onClick={() => plusCount(2)}>count + 2</button>
+      <button onClick={() => minusCount(3)}>count - 3</button>
       <Sample></Sample>
     </>
   );

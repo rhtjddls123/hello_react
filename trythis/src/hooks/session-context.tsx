@@ -1,10 +1,10 @@
 import {
   createContext,
-  useState,
   PropsWithChildren,
   useContext,
   useRef,
   useEffect,
+  useReducer,
 } from 'react';
 import { DefaultSession } from '../dummy';
 import { LoginHandle } from '../components/Login';
@@ -25,16 +25,53 @@ const SessionContext = createContext<SessionContextProps>({
   removeCartItem: () => {},
 });
 
+type action = {
+  type?: string;
+  payload: LoginUser | null | Cart;
+  itemId?: number;
+};
+
+const reducer = (session: Session, action: action) => {
+  switch (action.type) {
+    case 'login':
+      return { ...session, loginUser: action.payload };
+    case 'logout':
+      return { ...session, loginUser: null };
+    case 'addCart':
+      return { ...session, cart: [...session.cart] };
+    case 'removeCartItem':
+      return {
+        ...session,
+        cart: session.cart.filter((cartItem) => cartItem.id !== action.itemId),
+      };
+    default:
+      return session;
+  }
+};
+
 const SessionContextProvider = ({ children }: PropsWithChildren) => {
-  const [session, setSession] = useState<Session>(DefaultSession);
-  const { useFetch } = useFetchs();
+  // const [session, setSession] = useState<Session>(DefaultSession);
+  const [session, dispatch] = useReducer(reducer, DefaultSession);
+  // const { useFetch } = useFetchs();
 
-  const url = '/data/sample.json';
-  const data = useFetch<Session>(url);
+  // const url = '/data/sample.json';
+  // const data = useFetch<Session>(url);
 
-  useEffect(() => {
-    if (data) setSession(data);
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) setSession(data);
+  // }, [data]);
+
+  const loginHandleRef = useRef<LoginHandle>(null);
+  const login = ({ id, name }: LoginUser) => {
+    if (id === 0 || !name.trim()) {
+      alert('Input Id or Name');
+      loginHandleRef.current?.focusName();
+      return;
+    }
+    dispatch({ type: 'login', payload: { id, name } });
+  };
+
+  const logout = () => dispatch({ type: 'logout', payload: null });
 
   const addCart = (id: number, name: string, price: number) => {
     id = id || Math.max(...session.cart.map((item) => item.id), 0) + 1;
@@ -45,27 +82,14 @@ const SessionContextProvider = ({ children }: PropsWithChildren) => {
     } else {
       session.cart.push({ id, name, price });
     }
-    setSession({ ...session, cart: [...session.cart] });
-  };
-
-  const loginHandleRef = useRef<LoginHandle>(null);
-  const login = ({ id, name }: LoginUser) => {
-    if (id === 0 || !name.trim()) {
-      alert('Input Id or Name');
-      loginHandleRef.current?.focusName();
-      return;
-    }
-    setSession({ ...session, loginUser: { id, name } });
-  };
-
-  const logout = () => {
-    setSession({ ...session, loginUser: null });
+    dispatch({ type: 'addCart', payload: { id, name, price } });
   };
 
   const removeCartItem = (itemId: number) => {
-    setSession({
-      ...session,
-      cart: session.cart.filter((cartItem) => cartItem.id !== itemId),
+    dispatch({
+      type: 'removeCartItem',
+      payload: null,
+      itemId,
     });
   };
 
