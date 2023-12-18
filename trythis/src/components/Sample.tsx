@@ -8,9 +8,8 @@ export const Sample = () => {
 
   const memoArray = useMemo(() => array, []);
   useEffect(() => {
-    console.log('effect Array@@');
+    // console.log('effect Array@@');
   }, [array]);
-  console.log('rerender');
 
   return (
     <>

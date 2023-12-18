@@ -5,6 +5,7 @@ import {
   useRef,
   useEffect,
   useReducer,
+  useCallback,
 } from 'react';
 import { DefaultSession } from '../dummy';
 import { LoginHandle } from '../components/Login';
@@ -25,73 +26,119 @@ const SessionContext = createContext<SessionContextProps>({
   removeCartItem: () => {},
 });
 
-type action = {
-  type?: string;
-  payload: LoginUser | null | Cart;
-  itemId?: number;
-};
+enum ActionType {
+  SET_SESSION = 'setSession',
+  LOGIN = 'login',
+  LOGOUT = 'logout',
+  ADD_ITEM = 'addCart',
+  REMOVE_ITEM = 'removeCartItem',
+}
+
+type action =
+  | { type: ActionType.SET_SESSION; payload: Session }
+  | { type: ActionType.LOGIN; payload: LoginUser }
+  | { type: ActionType.LOGOUT; payload: null }
+  | { type: ActionType.ADD_ITEM; payload: Cart[] }
+  | { type: ActionType.REMOVE_ITEM; payload: number };
 
 const reducer = (session: Session, action: action) => {
+  let tmp = session;
   switch (action.type) {
     case 'login':
-      return { ...session, loginUser: action.payload };
     case 'logout':
-      return { ...session, loginUser: null };
+      tmp = { ...session, loginUser: action.payload };
+      break;
     case 'addCart':
-      return { ...session, cart: [...session.cart] };
+      tmp = { ...session, cart: [...action.payload] };
+      break;
     case 'removeCartItem':
-      return {
+      tmp = {
         ...session,
-        cart: session.cart.filter((cartItem) => cartItem.id !== action.itemId),
+        cart: session?.cart.filter(
+          (cartItem) => cartItem.id !== action.payload
+        ),
       };
-    default:
-      return session;
+      break;
+    case 'setSession':
+      tmp = { ...action.payload };
+      break;
   }
+
+  setStorage(tmp);
+  return tmp;
+};
+
+const SKEY = 'SESSION';
+const setStorage = (session: Session | undefined) => {
+  if (!session) return;
+  // console.log('@@@@@@@@@@@@@@@@@@@@@', session);
+  const { loginUser, cart } = session;
+  sessionStorage.setItem(SKEY, JSON.stringify(loginUser));
+  localStorage.setItem(SKEY, JSON.stringify(cart));
+};
+
+const getStorage = () => {
+  const strLogin = sessionStorage.getItem(SKEY);
+  const strCart = localStorage.getItem(SKEY);
+  if (!strCart || strCart === '[]') return undefined;
+
+  const loginUser = strLogin ? JSON.parse(strLogin) : null;
+  const cart = JSON.parse(strCart);
+
+  return { loginUser, cart };
 };
 
 const SessionContextProvider = ({ children }: PropsWithChildren) => {
   // const [session, setSession] = useState<Session>(DefaultSession);
-  const [session, dispatch] = useReducer(reducer, DefaultSession);
-  // const { useFetch } = useFetchs();
+  const storageData = getStorage();
+  const [session, dispatch] = useReducer(
+    reducer,
+    storageData || DefaultSession
+  );
+  const { useFetch } = useFetchs();
 
-  // const url = '/data/sample.json';
-  // const data = useFetch<Session>(url);
+  const url = '/data/sample.json';
+  const data = useFetch<Session>(url, storageData);
 
-  // useEffect(() => {
-  //   if (data) setSession(data);
-  // }, [data]);
+  useEffect(() => {
+    if (data) dispatch({ type: ActionType.SET_SESSION, payload: data });
+  }, [data]);
 
   const loginHandleRef = useRef<LoginHandle>(null);
-  const login = ({ id, name }: LoginUser) => {
+  const login = useCallback(({ id, name }: LoginUser) => {
     if (id === 0 || !name.trim()) {
       alert('Input Id or Name');
       loginHandleRef.current?.focusName();
       return;
     }
-    dispatch({ type: 'login', payload: { id, name } });
-  };
+    dispatch({ type: ActionType.LOGIN, payload: { id, name } });
+  }, []);
 
-  const logout = () => dispatch({ type: 'logout', payload: null });
+  const logout = useCallback(() => {
+    dispatch({ type: ActionType.LOGOUT, payload: null });
+  }, []);
 
-  const addCart = (id: number, name: string, price: number) => {
-    id = id || Math.max(...session.cart.map((item) => item.id), 0) + 1;
-    const modifyItem = session.cart.find((item) => item.id === id);
-    if (modifyItem) {
-      modifyItem.name = name;
-      modifyItem.price = price;
-    } else {
-      session.cart.push({ id, name, price });
-    }
-    dispatch({ type: 'addCart', payload: { id, name, price } });
-  };
+  const addCart = useCallback(
+    (id: number, name: string, price: number) => {
+      id = id || Math.max(...session.cart.map((item) => item.id), 0) + 1;
+      const modifyItem = session.cart.find((item) => item.id === id);
+      if (modifyItem) {
+        modifyItem.name = name;
+        modifyItem.price = price;
+      } else {
+        session.cart.push({ id, name, price });
+      }
+      dispatch({ type: ActionType.ADD_ITEM, payload: session.cart });
+    },
+    [session]
+  );
 
-  const removeCartItem = (itemId: number) => {
+  const removeCartItem = useCallback((itemId: number) => {
     dispatch({
-      type: 'removeCartItem',
-      payload: null,
-      itemId,
+      type: ActionType.REMOVE_ITEM,
+      payload: itemId,
     });
-  };
+  }, []);
 
   return (
     <SessionContext.Provider

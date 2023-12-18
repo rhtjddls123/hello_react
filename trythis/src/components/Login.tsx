@@ -5,19 +5,21 @@ import {
   useRef,
   forwardRef,
   useImperativeHandle,
+  memo,
 } from 'react';
-import { useSession } from '../hooks/session-context';
 import { useCounter } from '../hooks/counter-context';
 
 export type LoginHandle = {
   focusName: () => void;
 };
+type Props = {
+  login: ({ id, name }: LoginUser) => void;
+};
 
-const Login = forwardRef((_, handleRef) => {
-  console.log('login@@@@@');
+export const Login = forwardRef(({ login }: Props, ref) => {
+  // console.log('login@@@@@');
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-  const { login } = useSession();
   const { plusCount, minusCount } = useCounter();
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -32,7 +34,7 @@ const Login = forwardRef((_, handleRef) => {
     if (nameRef.current) nameRef.current.focus();
   };
 
-  useImperativeHandle(handleRef, () => ({
+  useImperativeHandle(ref, () => ({
     focusName,
   }));
 
@@ -61,4 +63,4 @@ const Login = forwardRef((_, handleRef) => {
     </>
   );
 });
-export default Login;
+export const LoginMemo = memo(Login, () => true);

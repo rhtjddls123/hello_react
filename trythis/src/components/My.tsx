@@ -1,5 +1,5 @@
 // src/components/My.tsx
-import Login from './Login';
+import { LoginMemo } from './Login';
 import Profile from './Profile';
 import Cart from './Cart';
 import { useSession } from '../hooks/session-context';
@@ -7,8 +7,8 @@ import { memo, useRef } from 'react';
 import { CartHandle } from './Cart';
 
 export const My = () => {
-  console.log('@@My');
-  const { session, addCart, removeCartItem } = useSession();
+  // console.log('@@My');
+  const { session, addCart, removeCartItem, login } = useSession();
   const childRef = useRef<CartHandle>(null);
 
   return (
@@ -17,7 +17,7 @@ export const My = () => {
       {session.loginUser ? (
         <Profile />
       ) : (
-        <Login />
+        <LoginMemo login={login} />
         // <Login login={login} ref={loginHandleRef} />
       )}
       <Cart ref={childRef} addCart={addCart}></Cart>

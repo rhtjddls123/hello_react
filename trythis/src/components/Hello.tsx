@@ -15,7 +15,7 @@ export const Hello = ({
   fn,
   children,
 }: PropsWithChildren<Props>) => {
-  console.log('@@Hello');
+  // console.log('@@Hello');
   const { plusCount, minusCount } = useCounter();
 
   useEffect(() => {

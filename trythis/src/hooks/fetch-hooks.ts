@@ -10,10 +10,11 @@ const fetchByCache = async (url: string, init: RequestInit) => {
 };
 
 export const useFetchs = () => {
-  const useFetch = <T>(url: string) => {
-    const [data, setData] = useState<T | null>(null);
+  const useFetch = <T>(url: string, storageData?: T) => {
+    const [data, setData] = useState<T | undefined>(storageData);
 
     useEffect(() => {
+      if (data) return;
       const controller = new AbortController();
       const { signal } = controller;
 

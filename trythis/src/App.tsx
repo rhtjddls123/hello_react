@@ -5,6 +5,7 @@ import './App.css';
 import { useCounter } from './hooks/counter-context';
 import { useState, useEffect, useCallback } from 'react';
 import { useTimer } from './hooks/timer-hooks';
+import { SessionContextProvider } from './hooks/session-context.tsx';
 
 function App() {
   // console.log('@@@App');
@@ -37,7 +38,7 @@ function App() {
   );
 
   return (
-    <>
+    <SessionContextProvider>
       <span style={{ float: 'left', color: 'red' }}>{badSec} sec</span>
       <span style={{ float: 'right', color: 'green' }}>{goodSec} sec</span>
 
@@ -46,7 +47,7 @@ function App() {
       <MemoHello name='홍길동' age={32} fn={fn}>
         <h3>반갑습니다~</h3>
       </MemoHello>
-    </>
+    </SessionContextProvider>
   );
 }
 
