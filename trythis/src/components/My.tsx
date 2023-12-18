@@ -5,24 +5,30 @@ import Cart from './Cart';
 import { useSession } from '../hooks/session-context';
 import { memo, useRef } from 'react';
 import { CartHandle } from './Cart';
+import classNames from 'classnames';
 
 export const My = () => {
   // console.log('@@My');
-  const { session, addCart, removeCartItem, login } = useSession();
+  const {
+    session: { loginUser, cart },
+    addCart,
+    removeCartItem,
+    login,
+  } = useSession();
   const childRef = useRef<CartHandle>(null);
 
   return (
     <>
       {/* <button onClick={() => loginHandleRef.current?.focusName()}>XXX</button> */}
-      {session.loginUser ? (
-        <Profile />
-      ) : (
-        <LoginMemo login={login} />
-        // <Login login={login} ref={loginHandleRef} />
-      )}
+      <div className={classNames({ 'green-border': !loginUser })}>
+        {
+          loginUser ? <Profile /> : <LoginMemo login={login} />
+          // <Login login={login} ref={loginHandleRef} />
+        }
+      </div>
       <Cart ref={childRef} addCart={addCart}></Cart>
       <ul>
-        {session.cart.map(({ id, name, price }) => (
+        {cart.map(({ id, name, price }) => (
           <li key={id}>
             <small>{id}</small>
             <a
