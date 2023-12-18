@@ -1,5 +1,5 @@
 import './App.css';
-import Title from './components/Title';
+import { TitleMemo } from './components/Title';
 import Box from './components/Box';
 import Counter from './components/Counter';
 import { useState } from 'react';
@@ -13,7 +13,6 @@ function App() {
       setCount((count) => count - 1);
     }
   };
-  Title({ color: 'red', children: 'abc' });
   return (
     <>
       <Box
@@ -23,10 +22,10 @@ function App() {
         padding='4px'
         margin='2px'
       >
-        <Title color='red'>
+        <TitleMemo color='red'>
           {/* <Title title='React Tutorial' color='red'> */}
           sub title: Counter (using UseState)
-        </Title>
+        </TitleMemo>
         {/* <Counter /> */}
         <h1>Count: {count}</h1>
         <Counter increaseOrDecreaseCount={increaseOrDecreaseCount} />
