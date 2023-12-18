@@ -3,45 +3,61 @@ import { MemoHello } from './components/Hello';
 import { MyMemo } from './components/My';
 import './App.css';
 import { useCounter } from './hooks/counter-context';
-import { useState, useEffect, useCallback } from 'react';
+import {
+  useState,
+  useCallback,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+} from 'react';
 import { useTimer } from './hooks/timer-hooks';
 import { SessionContextProvider } from './hooks/session-context.tsx';
 
-function App() {
-  // console.log('@@@App');
-  const { count } = useCounter();
+type ChildHandler = {
+  appendPeriod: () => void;
+};
+const ChildComponent = forwardRef((_, ref) => {
+  const [childText, setChildText] = useState('.');
+  const [badCount, setBadCount] = useState(0);
+  const [goodCount, setGoodCount] = useState(0);
 
-  const [badSec, setBadSec] = useState(0);
-  const [goodSec, setGoodSec] = useState(0);
   const { useInterval, useTimeout } = useTimer();
-  const fn = useCallback(() => 'useCallback', []);
-  // const fn = () => 'FN';
 
-  useInterval(() => setBadSec((pre) => pre + 1), 1000);
+  useInterval(() => setBadCount((pre) => pre + 1), 1000);
+  useInterval(() => setGoodCount((pre) => pre + 1), 1000);
 
-  useEffect(() => {
-    const goodSet = setInterval(() => setGoodSec((pre) => pre + 1), 1000);
-    return () => {
-      clearInterval(goodSet);
-    };
-  }, []);
-
-  useTimeout(() => console.log('X'), 1000);
-  useTimeout((name) => console.log(`Hello, ${name}!!!`), 1000, ['Hong']);
   useTimeout(
-    (init) => {
-      setBadSec(Number(init));
-      setGoodSec(Number(init));
+    (initSec) => {
+      setBadCount(initSec);
+      setGoodCount(initSec);
     },
     5000,
     100
   );
+  const handler: ChildHandler = {
+    appendPeriod: () => setChildText((c) => c + '.'),
+  };
+  useImperativeHandle(ref, () => handler);
+  return (
+    <>
+      <strong style={{ float: 'left', color: 'red' }}>{badCount}</strong>
+      childComp:{childText}
+      <strong style={{ float: 'right', color: 'green' }}>{goodCount}</strong>
+    </>
+  );
+});
+
+function App() {
+  // console.log('@@@App');
+  const { count } = useCounter();
+  const fn = useCallback(() => 'useCallback', []);
+  // const fn = () => 'FN';
+
+  const childRef = useRef<ChildHandler>(null);
 
   return (
     <SessionContextProvider>
-      <span style={{ float: 'left', color: 'red' }}>{badSec} sec</span>
-      <span style={{ float: 'right', color: 'green' }}>{goodSec} sec</span>
-
+      <ChildComponent ref={childRef} />
       <h2>count: {count}</h2>
       <MyMemo />
       <MemoHello name='홍길동' age={32} fn={fn}>

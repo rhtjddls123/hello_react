@@ -80,7 +80,8 @@ const setStorage = (session: Session | undefined) => {
 const getStorage = () => {
   const strLogin = sessionStorage.getItem(SKEY);
   const strCart = localStorage.getItem(SKEY);
-  if (!strCart || strCart === '[]') return undefined;
+  console.log('strLogin>>>>>>>>>>>>>>>>>', strLogin);
+  if (!strCart || (strCart === '[]' && strLogin === 'null')) return undefined;
 
   const loginUser = strLogin ? JSON.parse(strLogin) : null;
   const cart = JSON.parse(strCart);
