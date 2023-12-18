@@ -2,9 +2,10 @@ import './App.css';
 import { TitleMemo } from './components/Title';
 import Box from './components/Box';
 import Counter from './components/Counter';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 function App() {
+  const [subTitle, setSubTitle] = useState<string>('asdfasdf');
   const [count, setCount] = useState(0);
   const increaseOrDecreaseCount = (state: string) => {
     if (state === 'increase') {
@@ -13,6 +14,12 @@ function App() {
       setCount((count) => count - 1);
     }
   };
+
+  const changeSubTitle = (evt: ChangeEvent<HTMLInputElement>) => {
+    // console.log(subTitle);
+    return setSubTitle(evt.currentTarget.value);
+  };
+
   return (
     <>
       <Box
@@ -24,11 +31,12 @@ function App() {
       >
         <TitleMemo color='red'>
           {/* <Title title='React Tutorial' color='red'> */}
-          sub title: Counter (using UseState)
+          sub title: {subTitle}
         </TitleMemo>
         {/* <Counter /> */}
         <h1>Count: {count}</h1>
         <Counter increaseOrDecreaseCount={increaseOrDecreaseCount} />
+        <input type='text' value={subTitle} onChange={changeSubTitle} />
       </Box>
     </>
   );
