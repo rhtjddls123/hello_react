@@ -8,19 +8,27 @@ import {
   memo,
 } from 'react';
 import { useCounter } from '../hooks/counter-context';
+import { useSession } from '../hooks/session-context';
+import { useNavigate } from 'react-router-dom';
 
 export type LoginHandle = {
   focusName: () => void;
 };
-type Props = {
-  login: ({ id, name }: LoginUser) => void;
-};
 
-export const Login = forwardRef(({ login }: Props, ref) => {
+export const Login = forwardRef((_, ref) => {
   // console.log('login@@@@@');
   const idRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const { plusCount, minusCount } = useCounter();
+  const {
+    login,
+    session: { loginUser },
+  } = useSession();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (loginUser) navigate('/my');
+  }, [loginUser, navigate]);
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
