@@ -13,11 +13,7 @@ import {
 import { useTimer } from './hooks/timer-hooks';
 import { SessionContextProvider } from './hooks/session-context.tsx';
 
-type ChildHandler = {
-  appendPeriod: () => void;
-};
 const ChildComponent = forwardRef((_, ref) => {
-  const [childText, setChildText] = useState('.');
   const [badCount, setBadCount] = useState(0);
   const [goodCount, setGoodCount] = useState(0);
 
@@ -28,20 +24,16 @@ const ChildComponent = forwardRef((_, ref) => {
 
   useTimeout(
     (initSec) => {
-      setBadCount(initSec);
-      setGoodCount(initSec);
+      setBadCount(Number(initSec));
+      setGoodCount(Number(initSec));
     },
     5000,
     100
   );
-  const handler: ChildHandler = {
-    appendPeriod: () => setChildText((c) => c + '.'),
-  };
-  useImperativeHandle(ref, () => handler);
+  useImperativeHandle(ref, () => {});
   return (
     <>
       <strong style={{ float: 'left', color: 'red' }}>{badCount}</strong>
-      childComp:{childText}
       <strong style={{ float: 'right', color: 'green' }}>{goodCount}</strong>
     </>
   );
@@ -53,7 +45,7 @@ function App() {
   const fn = useCallback(() => 'useCallback', []);
   // const fn = () => 'FN';
 
-  const childRef = useRef<ChildHandler>(null);
+  const childRef = useRef(null);
 
   return (
     <SessionContextProvider>
