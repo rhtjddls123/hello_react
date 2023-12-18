@@ -116,8 +116,8 @@ const SessionContextProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const logout = useCallback(() => {
-    dispatch({ type: ActionType.LOGOUT, payload: null });
-  }, []);
+    if (session.loginUser) dispatch({ type: ActionType.LOGOUT, payload: null });
+  }, [session]);
 
   const addCart = useCallback(
     (id: number, name: string, price: number) => {
