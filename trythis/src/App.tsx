@@ -8,8 +8,8 @@ import { My } from './components/My.tsx';
 import { SessionContextProvider } from './hooks/session-context.tsx';
 import { Routes, Route } from 'react-router-dom';
 import { useCallback } from 'react';
-import { Items } from './components/items.tsx';
-import { Item } from './components/item.tsx';
+// import { Items } from './components/Items.tsx';
+import { Item } from './components/Item.tsx';
 import { Login } from './components/Login.tsx';
 import { ItemLayout } from './components/ItemLayout.tsx';
 
@@ -24,8 +24,8 @@ function App() {
         <Route path='/my' element={<My />} />
         <Route path='/login' element={<Login />} />
         <Route path='/items' element={<ItemLayout />}>
-          <Route index element={<Items />} />
-          <Route path=':id' element={<Item />} />
+          <Route index element={<Item />} />
+          {/* <Route path=':id' element={<Item />} /> */}
         </Route>
         {/* <Route path='/items' element={<Items />} />
         <Route path='/items/:id' element={<Item />} /> */}
