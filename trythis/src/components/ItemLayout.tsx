@@ -15,7 +15,7 @@ export const ItemLayout = () => {
     searchStr: '',
     itemId: '',
   });
-  const [currItem, setCurrItem] = useState<Cart | null>();
+  const [currItem, setCurrItem] = useState<Cart | null>(null);
 
   const searchStr = searchParams.get('searchStr') || '';
   const itemId = searchParams.get('itemId') || '';
@@ -85,9 +85,7 @@ export const ItemLayout = () => {
             ADD
           </button>
         </div>
-        <Outlet
-          context={{ item: currItem, addCart, removeCartItem, setSearchParams }}
-        />
+        <Outlet context={{ item: currItem, addCart, removeCartItem }} />
       </div>
     </>
   );
