@@ -3,6 +3,7 @@ import { TitleMemo } from './components/Title';
 import Box from './components/Box';
 import { CounterMemo } from './components/Counter';
 import { useCallback, useRef, useState } from 'react';
+import CompBox from './components/CompBox';
 
 function App() {
   const [subTitle, setSubTitle] = useState<string>('');
@@ -42,6 +43,7 @@ function App() {
           입력
         </button>
       </Box>
+      <CompBox />
     </>
   );
 }
