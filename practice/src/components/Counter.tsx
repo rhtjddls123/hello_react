@@ -15,4 +15,9 @@ export const Counter = ({ increaseOrDecreaseCount }: Props) => {
   );
 };
 
-export const CounterMemo = memo(Counter, () => true);
+export const CounterMemo = memo(
+  Counter,
+  ({ increaseOrDecreaseCount: a }, { increaseOrDecreaseCount: b }) => {
+    return a === b;
+  }
+);
