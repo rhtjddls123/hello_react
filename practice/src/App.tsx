@@ -1,7 +1,7 @@
 import './App.css';
 import { TitleMemo } from './components/Title';
 import Box from './components/Box';
-import Counter from './components/Counter';
+import { CounterMemo } from './components/Counter';
 import { useRef, useState } from 'react';
 
 function App() {
@@ -15,6 +15,7 @@ function App() {
       setCount((count) => count - 1);
     }
   };
+  console.log('App');
   return (
     <>
       <Box
@@ -30,7 +31,7 @@ function App() {
         </TitleMemo>
         {/* <Counter /> */}
         <h1>Count: {count}</h1>
-        <Counter increaseOrDecreaseCount={increaseOrDecreaseCount} />
+        <CounterMemo increaseOrDecreaseCount={increaseOrDecreaseCount} />
 
         <input type='text' ref={inputRef} />
         <button

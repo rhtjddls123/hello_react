@@ -1,10 +1,11 @@
-// import { useState } from 'react';
+import { memo } from 'react';
 
 type Props = {
   increaseOrDecreaseCount: Function;
 };
 
-const Counter = ({ increaseOrDecreaseCount }: Props) => {
+export const Counter = ({ increaseOrDecreaseCount }: Props) => {
+  console.log('render Counter Component');
   // const [count, setCount] = useState(0);
   return (
     <>
@@ -14,4 +15,4 @@ const Counter = ({ increaseOrDecreaseCount }: Props) => {
   );
 };
 
-export default Counter;
+export const CounterMemo = memo(Counter, () => true);
