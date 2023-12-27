@@ -1,6 +1,6 @@
 import Box from './Box';
 
-const CompA = () => {
+const CompA = ({ count }: { count: number }) => {
   return (
     <Box
       borderWidth='2px'
@@ -9,7 +9,7 @@ const CompA = () => {
       padding='4px'
       margin='2px'
     >
-      CompA
+      CompA({count})
     </Box>
   );
 };

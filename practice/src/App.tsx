@@ -43,7 +43,7 @@ function App() {
           입력
         </button>
       </Box>
-      <CompBox />
+      <CompBox count={count} />
     </>
   );
 }

@@ -20,7 +20,7 @@ const reducer = (
   }
 };
 
-const CompBox = () => {
+const CompBox = ({ count }: { count: number }) => {
   // const [toggles, setToggles] = useState({ A: false, B: false, C: false });
   const [toggles, dispatch] = useReducer(reducer, {
     A: false,
@@ -40,7 +40,7 @@ const CompBox = () => {
       <button onClick={() => dispatch('B')}>toggleB</button>
       <button onClick={() => dispatch('C')}>toggleC</button>
       <br />
-      {toggles.A && <CompA />}
+      {toggles.A && <CompA count={count} />}
       {toggles.B && <CompB />}
       {toggles.C && <CompC />}
     </Box>
