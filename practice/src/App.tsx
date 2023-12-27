@@ -2,19 +2,19 @@ import './App.css';
 import { TitleMemo } from './components/Title';
 import Box from './components/Box';
 import { CounterMemo } from './components/Counter';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 function App() {
   const [subTitle, setSubTitle] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const [count, setCount] = useState(0);
-  const increaseOrDecreaseCount = (state: string) => {
+  const increaseOrDecreaseCount = useCallback((state: string) => {
     if (state === 'increase') {
       setCount((count) => count + 1);
     } else if (state === 'decrease') {
       setCount((count) => count - 1);
     }
-  };
+  }, []);
   console.log('App');
   return (
     <>
