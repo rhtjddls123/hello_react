@@ -1,4 +1,4 @@
-import { memo, useReducer } from 'react';
+import { memo, useReducer, useState } from 'react';
 import Box from './Box';
 import { CompAMemo } from './CompA';
 import { CompBMemo } from './CompB';
@@ -27,7 +27,7 @@ export const CompBox = () => {
     B: false,
     C: false,
   });
-  console.log('CompBox');
+  const [mountComp, setMountComp] = useState(0);
 
   return (
     <Box
@@ -41,9 +41,10 @@ export const CompBox = () => {
       <button onClick={() => dispatch('B')}>toggleB</button>
       <button onClick={() => dispatch('C')}>toggleC</button>
       <br />
-      {toggles.A && <CompAMemo />}
-      {toggles.B && <CompBMemo />}
-      {toggles.C && <CompCMemo />}
+      Mounted Component Count: {mountComp}
+      {toggles.A && <CompAMemo setMountComp={setMountComp} />}
+      {toggles.B && <CompBMemo setMountComp={setMountComp} />}
+      {toggles.C && <CompCMemo setMountComp={setMountComp} />}
     </Box>
   );
 };

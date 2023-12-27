@@ -1,8 +1,18 @@
-import { memo } from 'react';
+import { Dispatch, SetStateAction, memo, useEffect } from 'react';
 import Box from './Box';
 
-export const CompC = () => {
+export const CompC = ({
+  setMountComp,
+}: {
+  setMountComp: Dispatch<SetStateAction<number>>;
+}) => {
   console.log('CompC');
+  useEffect(() => {
+    setMountComp((pre) => (pre = pre + 1));
+    return () => {
+      setMountComp((pre) => (pre = pre - 1));
+    };
+  }, []);
   return (
     <Box
       borderWidth='2px'

@@ -1,10 +1,20 @@
-import { memo } from 'react';
+import { Dispatch, SetStateAction, memo, useEffect } from 'react';
 import { useCounter } from '../hooks/counter-context';
 import Box from './Box';
 
-export const CompA = () => {
+export const CompA = ({
+  setMountComp,
+}: {
+  setMountComp: Dispatch<SetStateAction<number>>;
+}) => {
   const { count } = useCounter();
   console.log('CompA');
+  useEffect(() => {
+    setMountComp((pre) => (pre = pre + 1));
+    return () => {
+      setMountComp((pre) => (pre = pre - 1));
+    };
+  }, []);
 
   return (
     <Box
