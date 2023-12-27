@@ -1,6 +1,8 @@
+import { memo } from 'react';
 import Box from './Box';
 
-const CompB = () => {
+export const CompB = () => {
+  console.log('CompB');
   return (
     <Box
       borderWidth='2px'
@@ -13,4 +15,6 @@ const CompB = () => {
     </Box>
   );
 };
-export default CompB;
+export const CompBMemo = memo(CompB, () => {
+  return true;
+});

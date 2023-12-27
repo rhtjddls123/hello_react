@@ -1,8 +1,8 @@
-import { useReducer } from 'react';
+import { memo, useReducer } from 'react';
 import Box from './Box';
-import CompA from './CompA';
-import CompB from './CompB';
-import CompC from './CompC';
+import { CompAMemo } from './CompA';
+import { CompBMemo } from './CompB';
+import { CompCMemo } from './CompC';
 
 const reducer = (
   state: { A: boolean; B: boolean; C: boolean },
@@ -20,13 +20,14 @@ const reducer = (
   }
 };
 
-const CompBox = ({ count }: { count: number }) => {
+export const CompBox = () => {
   // const [toggles, setToggles] = useState({ A: false, B: false, C: false });
   const [toggles, dispatch] = useReducer(reducer, {
     A: false,
     B: false,
     C: false,
   });
+  console.log('CompBox');
 
   return (
     <Box
@@ -40,10 +41,12 @@ const CompBox = ({ count }: { count: number }) => {
       <button onClick={() => dispatch('B')}>toggleB</button>
       <button onClick={() => dispatch('C')}>toggleC</button>
       <br />
-      {toggles.A && <CompA count={count} />}
-      {toggles.B && <CompB />}
-      {toggles.C && <CompC />}
+      {toggles.A && <CompAMemo />}
+      {toggles.B && <CompBMemo />}
+      {toggles.C && <CompCMemo />}
     </Box>
   );
 };
-export default CompBox;
+export const CompBoxMemo = memo(CompBox, () => {
+  return true;
+});

@@ -1,6 +1,11 @@
+import { memo } from 'react';
+import { useCounter } from '../hooks/counter-context';
 import Box from './Box';
 
-const CompA = ({ count }: { count: number }) => {
+export const CompA = () => {
+  const { count } = useCounter();
+  console.log('CompA');
+
   return (
     <Box
       borderWidth='2px'
@@ -13,4 +18,6 @@ const CompA = ({ count }: { count: number }) => {
     </Box>
   );
 };
-export default CompA;
+export const CompAMemo = memo(CompA, () => {
+  return true;
+});
