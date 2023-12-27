@@ -1,11 +1,33 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import Box from './Box';
 import CompA from './CompA';
 import CompB from './CompB';
 import CompC from './CompC';
 
+const reducer = (
+  state: { A: boolean; B: boolean; C: boolean },
+  type: string
+) => {
+  switch (type) {
+    case 'A':
+      return { ...state, A: !state.A };
+    case 'B':
+      return { ...state, B: !state.B };
+    case 'C':
+      return { ...state, C: !state.C };
+    default:
+      return state;
+  }
+};
+
 const CompBox = () => {
-  const [toggles, setToggles] = useState({ A: false, B: false, C: false });
+  // const [toggles, setToggles] = useState({ A: false, B: false, C: false });
+  const [toggles, dispatch] = useReducer(reducer, {
+    A: false,
+    B: false,
+    C: false,
+  });
+
   return (
     <Box
       borderWidth='2px'
@@ -14,27 +36,9 @@ const CompBox = () => {
       padding='4px'
       margin='2px'
     >
-      <button
-        onClick={() =>
-          setToggles({ A: !toggles.A, B: toggles.B, C: toggles.C })
-        }
-      >
-        toggleA
-      </button>
-      <button
-        onClick={() =>
-          setToggles({ A: toggles.A, B: !toggles.B, C: toggles.C })
-        }
-      >
-        toggleB
-      </button>
-      <button
-        onClick={() =>
-          setToggles({ A: toggles.A, B: toggles.B, C: !toggles.C })
-        }
-      >
-        toggleC
-      </button>
+      <button onClick={() => dispatch('A')}>toggleA</button>
+      <button onClick={() => dispatch('B')}>toggleB</button>
+      <button onClick={() => dispatch('C')}>toggleC</button>
       <br />
       {toggles.A && <CompA />}
       {toggles.B && <CompB />}
