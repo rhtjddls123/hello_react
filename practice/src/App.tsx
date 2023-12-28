@@ -9,7 +9,7 @@ import { useCounter } from './hooks/counter-context';
 function App() {
   const [subTitle, setSubTitle] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const { count } = useCounter();
+  const { count, plusCount, minusCount } = useCounter();
   console.log('App');
   return (
     <>
@@ -22,7 +22,7 @@ function App() {
       >
         <TitleMemo color='red'>sub title: {subTitle}</TitleMemo>
         <h1>Count: {count}</h1>
-        <CounterMemo />
+        <CounterMemo plusCount={plusCount} minusCount={minusCount} />
 
         <input type='text' ref={inputRef} />
         <button

@@ -1,8 +1,12 @@
 import { memo } from 'react';
-import { useCounter } from '../hooks/counter-context';
 
-export const Counter = () => {
-  const { plusCount, minusCount } = useCounter();
+export const Counter = ({
+  plusCount,
+  minusCount,
+}: {
+  plusCount: () => void;
+  minusCount: () => void;
+}) => {
   console.log('render Counter Component');
 
   return (
