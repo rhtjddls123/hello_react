@@ -5,25 +5,22 @@ import Log from "./components/Log";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 import GameOver from "./components/GameOver";
 
-const driveActivePlayer = (
-  gameTurns: { square: { row: number; col: number }; player: string }[]
-) => {
-  let curPlayer = "X";
+type gameTurnsType = { square: { row: number; col: number }; player: string }[];
 
-  if (gameTurns.length > 0 && gameTurns[0].player === "X") curPlayer = "O";
-  return curPlayer;
+const INITIAL_GAME_BOARD = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
+const PLAYERS = {
+  X: "Player 1",
+  O: "Player 2",
 };
 
-function App() {
-  const [players, setPlayers] = useState({ X: "Player 1", O: "Player 2" });
-  const [gameTurns, setGameTurns] = useState<
-    { square: { row: number; col: number }; player: string }[]
-  >([]);
-
+const driveGameBoard = (gameTurns: gameTurnsType) => {
   const gameBoard: (string | null)[][] = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
+    ...INITIAL_GAME_BOARD.map((array) => [...array]),
   ];
 
   for (const turn of gameTurns) {
@@ -33,8 +30,17 @@ function App() {
     gameBoard[row][col] = player;
   }
 
+  return gameBoard;
+};
+
+const driveWinner = (
+  gameBoard: (string | null)[][],
+  players: {
+    X: string;
+    O: string;
+  }
+) => {
   let winner: string | null = null;
-  const hasDraw = gameTurns.length === 9 && !winner;
 
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol =
@@ -51,7 +57,25 @@ function App() {
     )
       winner = players[firstSquareSymbol as "X" | "O"];
   }
+  return winner;
+};
+
+const driveActivePlayer = (gameTurns: gameTurnsType) => {
+  let curPlayer = "X";
+
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") curPlayer = "O";
+  return curPlayer;
+};
+
+function App() {
+  const [players, setPlayers] = useState(PLAYERS);
+  const [gameTurns, setGameTurns] = useState<gameTurnsType>([]);
+
+  const gameBoard = driveGameBoard(gameTurns);
   const activePlayer = driveActivePlayer(gameTurns);
+  const winner = driveWinner(gameBoard, players);
+
+  const hasDraw = gameTurns.length === 9 && !winner;
 
   const handleActivePlayer = (rowIndex: number, colIndex: number) => {
     setGameTurns((prevTurns) => {
@@ -80,13 +104,13 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            name="Player 1"
+            name={PLAYERS.X}
             symbol="X"
             activePlayer={activePlayer}
             onChangeName={handleSetName}
           />
           <Player
-            name="Player 2"
+            name={PLAYERS.O}
             symbol="O"
             activePlayer={activePlayer}
             onChangeName={handleSetName}
