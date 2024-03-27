@@ -3,9 +3,10 @@ import { useRef, useState } from "react";
 type Props = {
   name: string;
   symbol: string;
+  activePlayer: string;
 };
 
-const Player = ({ name, symbol }: Props) => {
+const Player = ({ name, symbol, activePlayer }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [playerName, setPlayerName] = useState<string | undefined>(name);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -16,7 +17,7 @@ const Player = ({ name, symbol }: Props) => {
   };
 
   return (
-    <li>
+    <li className={activePlayer === symbol ? "active" : undefined}>
       <span className="player">
         {isEditing ? (
           <input type="text" ref={nameRef} defaultValue={playerName} required />
