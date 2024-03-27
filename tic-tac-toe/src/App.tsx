@@ -3,19 +3,25 @@ import GameBoard from "./components/GameBoard";
 import Player from "./components/Player";
 import Log from "./components/Log";
 
+const driveActivePlayer = (
+  gameTurns: { square: { row: number; col: number }; player: string }[]
+) => {
+  let curPlayer = "X";
+
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") curPlayer = "O";
+  return curPlayer;
+};
+
 function App() {
   const [gameTurns, setGameTurns] = useState<
     { square: { row: number; col: number }; player: string }[]
   >([]);
-  const [activePlayer, setActivePlayer] = useState("X");
+
+  const activePlayer = driveActivePlayer(gameTurns);
 
   const handleActivePlayer = (rowIndex: number, colIndex: number) => {
-    setActivePlayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
-
     setGameTurns((prevTurns) => {
-      let curPlayer = "X";
-
-      if (gameTurns.length > 0 && prevTurns[0].player === "X") curPlayer = "O";
+      const curPlayer = driveActivePlayer(prevTurns);
 
       const updateTurns = [
         { square: { row: rowIndex, col: colIndex }, player: curPlayer },
