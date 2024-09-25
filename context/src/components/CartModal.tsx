@@ -3,8 +3,6 @@ import { createPortal } from "react-dom";
 import Cart from "./Cart";
 
 interface Props {
-  cartItems: cartType[];
-  onUpdateCartItemQuantity: (productId: string, amount: number) => void;
   title: string;
   actions: ReactNode;
 }
@@ -13,7 +11,7 @@ export interface HandleDialog {
   open: () => void;
 }
 
-const CartModal = forwardRef<HandleDialog, Props>(function Modal({ cartItems, onUpdateCartItemQuantity, title, actions }, ref) {
+const CartModal = forwardRef<HandleDialog, Props>(function Modal({ title, actions }, ref) {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useImperativeHandle(ref, () => {
@@ -30,7 +28,7 @@ const CartModal = forwardRef<HandleDialog, Props>(function Modal({ cartItems, on
     ? createPortal(
         <dialog id="modal" ref={dialog}>
           <h2>{title}</h2>
-          <Cart items={cartItems} onUpdateItemQuantity={onUpdateCartItemQuantity} />
+          <Cart />
           <form method="dialog" id="modal-actions">
             {actions}
           </form>

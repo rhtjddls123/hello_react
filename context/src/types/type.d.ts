@@ -1,4 +1,4 @@
-interface itemType {
+interface productType {
   id: string;
   image: string;
   title: string;
@@ -6,7 +6,7 @@ interface itemType {
   description: string;
 }
 
-interface cartType {
+interface itemType {
   id: string;
   name: string;
   price: number;
