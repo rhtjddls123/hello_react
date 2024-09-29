@@ -1,8 +1,8 @@
 interface Props {
   title: string;
   places: PlaceType[];
-  fallbackText?: string;
-  onSelectPlace: (id: string) => void;
+  fallbackText: string;
+  onSelectPlace: (id: PlaceType["id"]) => void;
 }
 
 export default function Places({ title, places, fallbackText, onSelectPlace }: Props) {
