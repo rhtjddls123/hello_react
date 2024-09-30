@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ElementType, ReactNode } from "react";
+import { ButtonHTMLAttributes, ElementType, memo, ReactNode } from "react";
 import { log } from "../../log.ts";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -6,7 +6,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-export default function IconButton({ children, icon, ...props }: Props) {
+const IconButton = memo(function IconButton({ children, icon, ...props }: Props) {
   log("<IconButton /> rendered", 2);
 
   const Icon = icon;
@@ -16,4 +16,6 @@ export default function IconButton({ children, icon, ...props }: Props) {
       <span className="button-text">{children}</span>
     </button>
   );
-}
+});
+
+export default IconButton;
