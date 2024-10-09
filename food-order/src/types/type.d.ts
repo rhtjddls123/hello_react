@@ -6,9 +6,6 @@ interface MealType {
   image: string;
 }
 
-interface itemType {
-  id: string;
-  name: string;
-  price: number;
+interface CartType extends MealType {
   quantity: number;
 }

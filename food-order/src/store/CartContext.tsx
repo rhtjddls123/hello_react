@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useReducer } from "react";
 
 interface CartContextType {
-  items: itemType[];
-  addItem: (item: itemType) => void;
+  items: CartType[];
+  addItem: (item: MealType) => void;
   removeItem: (id: string) => void;
 }
 
@@ -12,9 +12,9 @@ interface CartContextProviderType {
   children: ReactNode;
 }
 
-type ActionType = { type: "ADD_ITEM"; item: itemType } | { type: "REMOVE_ITEM"; id: string };
+type ActionType = { type: "ADD_ITEM"; item: MealType } | { type: "REMOVE_ITEM"; id: string };
 
-const cartReducer = (state: { items: itemType[] }, action: ActionType) => {
+const cartReducer = (state: { items: CartType[] }, action: ActionType) => {
   if (action.type === "ADD_ITEM") {
     const existingCartItemIndex = state.items.findIndex((item) => item.id === action.item.id);
 
@@ -52,7 +52,7 @@ const cartReducer = (state: { items: itemType[] }, action: ActionType) => {
 export const CartContextProvider = ({ children }: CartContextProviderType) => {
   const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
 
-  function addItem(item: itemType) {
+  function addItem(item: MealType) {
     dispatchCartAction({ type: "ADD_ITEM", item });
   }
 
