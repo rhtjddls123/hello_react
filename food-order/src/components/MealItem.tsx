@@ -1,12 +1,19 @@
-import { LiHTMLAttributes } from "react";
+import { LiHTMLAttributes, useContext } from "react";
 import { currencyFormatter } from "../utils/formatting";
 import Button from "./UI/Button";
+import { CartContext } from "../store/CartContext";
 
 interface MealItemProps extends LiHTMLAttributes<HTMLLIElement> {
   meal: MealType;
 }
 
 const MealItem = ({ meal, ...props }: MealItemProps) => {
+  const { addItem } = useContext(CartContext);
+
+  const handleAddMealToCart = () => {
+    addItem(meal);
+  };
+
   return (
     <li className="meal-item" {...props}>
       <article>
@@ -17,7 +24,7 @@ const MealItem = ({ meal, ...props }: MealItemProps) => {
           <p className="meal-item-description">{meal.description}</p>
         </div>
         <p className="meal-item-actions">
-          <Button>Add to Cart</Button>
+          <Button onClick={handleAddMealToCart}>Add to Cart</Button>
         </p>
       </article>
     </li>
