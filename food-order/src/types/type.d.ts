@@ -5,3 +5,10 @@ interface MealType {
   description: string;
   image: string;
 }
+
+interface itemType {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
