@@ -43,7 +43,7 @@ const cartReducer = (state: { items: CartType[] }, action: ActionType) => {
       updatedItems[existingCartItemIndex] = updatedItem;
     }
 
-    return { ...state, updatedItems };
+    return { ...state, items: updatedItems };
   }
 
   return state;
