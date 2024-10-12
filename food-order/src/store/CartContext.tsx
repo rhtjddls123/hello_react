@@ -4,15 +4,16 @@ interface CartContextType {
   items: CartType[];
   addItem: (item: MealType) => void;
   removeItem: (id: string) => void;
+  clearItem: () => void;
 }
 
-export const CartContext = createContext<CartContextType>({ items: [], addItem: () => {}, removeItem: () => {} });
+export const CartContext = createContext<CartContextType>({ items: [], addItem: () => {}, removeItem: () => {}, clearItem: () => {} });
 
 interface CartContextProviderType {
   children: ReactNode;
 }
 
-type ActionType = { type: "ADD_ITEM"; item: MealType } | { type: "REMOVE_ITEM"; id: string };
+type ActionType = { type: "ADD_ITEM"; item: MealType } | { type: "REMOVE_ITEM"; id: string } | { type: "CLEAR_ITEM" };
 
 const cartReducer = (state: { items: CartType[] }, action: ActionType) => {
   if (action.type === "ADD_ITEM") {
@@ -45,6 +46,9 @@ const cartReducer = (state: { items: CartType[] }, action: ActionType) => {
 
     return { ...state, items: updatedItems };
   }
+  if (action.type === "CLEAR_ITEM") {
+    return { ...state, items: [] };
+  }
 
   return state;
 };
@@ -60,10 +64,15 @@ export const CartContextProvider = ({ children }: CartContextProviderType) => {
     dispatchCartAction({ type: "REMOVE_ITEM", id });
   }
 
+  function clearItem() {
+    dispatchCartAction({ type: "CLEAR_ITEM" });
+  }
+
   const cartContext = {
     items: cart.items,
     addItem,
-    removeItem
+    removeItem,
+    clearItem
   };
 
   return <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>;
