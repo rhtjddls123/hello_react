@@ -1,12 +1,1 @@
-{
-  "events": [
-    {
-      "title": "A new event",
-      "image": "https://blog.hubspot.de/hubfs/Germany/Blog_images/Optimize_Marketing%20Events%20DACH%202021.jpg",
-      "date": "2022-10-01",
-      "description": "Some awesome event!",
-      "id": "2a42fcc4-ea21-4bdd-abf6-c40006dc66a9"
-    }
-  ],
-  "users": []
-}
+{"events":[{"title":"A new event","image":"https://blog.hubspot.de/hubfs/Germany/Blog_images/Optimize_Marketing%20Events%20DACH%202021.jpg","date":"2022-10-01","description":"Some awesome event!","id":"2a42fcc4-ea21-4bdd-abf6-c40006dc66a9"}],"users":[{"email":"test@test.com","password":"$2a$12$w3IxEFZhB1AHeQj9FEUEROlONdvWTpdag/U5V9FsRPIuxvUm0PL9O","id":"101b3e6c-34ab-43f5-8d82-478dfedace92"},{"email":"test2@test.com","password":"$2a$12$f9M4lh3FlbdaE/sjnFdRyeu2HdxUoSG3wdu4cDYGoTfPSZFvWR40i","id":"53c46e16-f3e1-49c1-8f31-93848c890d81"},{"email":"test3@test.com","password":"$2a$12$CIMLGs29l9x7Ji/qHwLS9uKFA6uv8eEq2eo.DlC/okMFnYdrSPGVu","id":"8618f3b3-ba5d-474e-a2f8-b0d29f718619"},{"email":"test4@test.com","password":"$2a$12$a4E1GegwIhT3Ni.qr6WkxOqBKaKl.T9o0IAWGWKEmOiUqqVtSNe4m","id":"479d36bb-0156-4b51-b2e4-d007c69ead3a"}]}

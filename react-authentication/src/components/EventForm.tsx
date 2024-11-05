@@ -2,6 +2,7 @@ import { Form, Params, useActionData, useNavigate, useNavigation } from "react-r
 import { ActionFunctionArgs, json, redirect } from "react-router-dom";
 
 import classes from "./EventForm.module.css";
+import { getAuthToken } from "../util/auth";
 
 interface EventFormProps {
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -70,10 +71,12 @@ export const manipulateEventAction = async ({ params, request }: actionProps) =>
 
   const url = `http://localhost:8081/events${request.method === "PATCH" ? `/${params.eventId}` : ""}`;
 
+  const token = getAuthToken();
   const response = await fetch(url, {
     method: request.method,
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(eventData)
   });

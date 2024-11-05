@@ -2,6 +2,7 @@ import { ActionFunctionArgs, Await, defer, json, LoaderFunctionArgs, Params, red
 import EventItem from "../components/EventItem";
 import { Suspense } from "react";
 import EventsList from "../components/EventsList";
+import { getAuthToken } from "../util/auth";
 
 const EventDetailPage = () => {
   const { event, events } = useRouteLoaderData("event-detail" as RouteKey) as { event: EventType; events: EventType[] };
@@ -59,7 +60,12 @@ interface actionProps extends ActionFunctionArgs {
 
 export const eventDeleteAction = async ({ params, request }: actionProps) => {
   const id = params.eventId;
+
+  const token = getAuthToken();
   const response = await fetch(`http://localhost:8081/events/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
     method: request.method
   });
   if (!response.ok) {
