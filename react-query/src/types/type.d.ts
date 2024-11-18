@@ -4,6 +4,8 @@ interface EventType {
   title: string;
   location: string;
   date: string;
+  time: string;
+  description: string;
 }
 
 interface InputDataType {

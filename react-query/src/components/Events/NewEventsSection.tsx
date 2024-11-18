@@ -1,55 +1,27 @@
-import { useEffect, useState } from "react";
 import LoadingIndicator from "../UI/LoadingIndicator";
 import ErrorBlock from "../UI/ErrorBlock";
 import EventItem from "./EventItem";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEvents } from "../../util/http";
 
-interface FetchError extends Error {
+export interface FetchError extends Error {
   code?: number;
-  info?: unknown;
+  info?: { message: string };
 }
 
 export default function NewEventsSection() {
-  const [data, setData] = useState<EventType[] | null>(null);
-  const [error, setError] = useState<FetchError | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    async function fetchEvents() {
-      setIsLoading(true);
-      const response = await fetch("http://localhost:3000/events");
-
-      if (!response.ok) {
-        const error: FetchError = new Error("An error occurred while fetching the events");
-        error.code = response.status;
-        error.info = await response.json();
-        throw error;
-      }
-
-      const { events } = await response.json();
-
-      return events;
-    }
-
-    fetchEvents()
-      .then((events) => {
-        setData(events);
-      })
-      .catch((error) => {
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
+  const { data, isPending, isError, error } = useQuery<EventType[], FetchError, EventType[], [string, { max: number }]>({
+    queryKey: ["events", { max: 3 }],
+    queryFn: ({ signal, queryKey }) => fetchEvents({ signal, ...queryKey[1] })
+  });
   let content;
 
-  if (isLoading) {
+  if (isPending) {
     content = <LoadingIndicator />;
   }
 
-  if (error) {
-    content = <ErrorBlock title="An error occurred" message="Failed to fetch events" />;
+  if (isError) {
+    content = <ErrorBlock title="An error occurred" message={error.info?.message || "Failed to fetch events."} />;
   }
 
   if (data) {
